@@ -65,7 +65,7 @@ def data_processing():
 	X = []
 	Y = []
 	auImagePaths = open('../splice_rnn_cnn/data/auImages.csv', 'r').readlines()
-	tpImagePaths = open('../splice_rnn_cnn/data/tpImages.csv', 'r').readlines()
+	tpImagePaths = open('../splice_rnn_cnn/data/spImages.csv', 'r').readlines()
 	auImagePaths = sorted(auImagePaths)
 	tpImagePaths = sorted(tpImagePaths)
 
