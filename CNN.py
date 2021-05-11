@@ -54,8 +54,8 @@ X = []
 Y = []
 
 # grab the image paths and randomly shuffle them
-auImagePaths = open('../sift2/data/auImages.csv', 'r').readlines()
-tpImagePaths = open('../sift/data/spImages.csv', 'r').readlines()
+auImagePaths = open('../splice_rnn_cnn/data/auImages.csv', 'r').readlines()
+tpImagePaths = open('../splice_rnn_cnn/data/spImages.csv', 'r').readlines()
 auImagePaths = sorted(auImagePaths)
 tpImagePaths = sorted(tpImagePaths)
 
