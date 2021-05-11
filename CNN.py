@@ -54,8 +54,8 @@ X = []
 Y = []
 
 # grab the image paths and randomly shuffle them
-auImagePaths = open('../data/auImages.csv', 'r').readlines()
-tpImagePaths = open('../data/tpImages.csv', 'r').readlines()
+auImagePaths = open('../sift2/data/auImages.csv', 'r').readlines()
+tpImagePaths = open('../sift/data/spImages.csv', 'r').readlines()
 auImagePaths = sorted(auImagePaths)
 tpImagePaths = sorted(tpImagePaths)
 
@@ -120,7 +120,7 @@ optimizer = RMSprop(lr=0.0005, rho=0.9, epsilon=1e-08, decay=0.0)
 
 model.compile(optimizer = optimizer , loss = "categorical_crossentropy", metrics=["accuracy"])
 
-early_stopping = EarlyStopping(monitor='val_acc',
+early_stopping = EarlyStopping(monitor='val_accuracy',
                               min_delta=0,
                               patience=10,
                               verbose=0, mode='auto')
@@ -131,55 +131,3 @@ batch_size = 32
 #history = model.fit_generator(aug.flow(X_train, Y_train, batch_size =  batch_size), steps_per_epoch=(len(X_train) /batch_size), epochs = epochs,            validation_data = (X_val, Y_val), verbose = 2, callbacks=[early_stopping])
 
 history = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data = (X_val, Y_val), verbose = 2, callbacks=[early_stopping, checkpoint_callback])
-
-# Plot the loss and accuracy curves for training and validation 
-fig, ax = plt.subplots(2,1)
-ax[0].plot(history.history['loss'], color='b', label="Training loss")
-ax[0].plot(history.history['val_loss'], color='r', label="validation loss",axes =ax[0])
-legend = ax[0].legend(loc='best', shadow=True)
-
-ax[1].plot(history.history['acc'], color='b', label="Training accuracy")
-ax[1].plot(history.history['val_acc'], color='r',label="Validation accuracy")
-legend = ax[1].legend(loc='best', shadow=True)
-plt.savefig('dc_Accuracy and loss curves during training-validation.png')
-
-def plot_confusion_matrix(cm, classes,
-                          normalize=False,
-                          title='Confusion matrix',
-                          cmap=plt.cm.Blues):
-    """
-    This function prints and plots the confusion matrix.
-    Normalization can be applied by setting `normalize=True`.
-    """
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
-
-    if normalize:
-        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-
-    thresh = cm.max() / 2.
-    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, cm[i, j],
-                 horizontalalignment="center",
-                 color="white" if cm[i, j] > thresh else "black")
-
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
-    
-plt.figure()
-# Predict the values from the validation dataset
-Y_pred = model.predict(X_val)
-# Convert predictions classes to one hot vectors 
-Y_pred_classes = np.argmax(Y_pred,axis = 1) 
-# Convert validation observations to one hot vectors
-Y_true = np.argmax(Y_val,axis = 1) 
-# compute the confusion matrix
-confusion_mtx = confusion_matrix(Y_true, Y_pred_classes) 
-# plot the confusion matrix
-plot_confusion_matrix(confusion_mtx, classes = range(2))
-plt.savefig('dc_confusion_matrix.png')
